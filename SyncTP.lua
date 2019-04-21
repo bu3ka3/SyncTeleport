@@ -1,28 +1,28 @@
-local sampev = require 'samp.events' -- подключаем библиотеку "SAMP.Lua"
+local sampev = require 'samp.events' -- РїРѕРґРєР»СЋС‡Р°РµРј Р±РёР±Р»РёРѕС‚РµРєСѓ "SAMP.Lua"
 
-function main() -- объявляем глобальную область 
-    while not isSampAvailable() do wait(0) end -- проверка на запущенную игру
-        sampRegisterChatCommand('stp', function(tp) -- задаём тело в глобальную область
-            lua_thread.create(function(tp) -- объявляем поток
-            local result, mX, mY, mZ = getTargetBlipCoordinates() -- объявляем в локальную переменную результат телепорта и координаты метки
-            if result then -- если результат успешен, то
-                setCharCoordinates(PLAYER_PED, 0.0, 0.0, 0.0) -- телепортируем в центр карты
+function main() -- РѕР±СЉСЏРІР»СЏРµРј РіР»РѕР±Р°Р»СЊРЅСѓСЋ РѕР±Р»Р°СЃС‚СЊ
+    while not isSampAvailable() do wait(0) end -- ГЇГ°Г®ГўГҐГ°ГЄГ  Г­Г  Г§Г ГЇГіГ№ГҐГ­Г­ГіГѕ ГЁГЈГ°Гі
+        sampRegisterChatCommand('stp', function(tp) -- Г§Г Г¤Г ВёГ¬ ГІГҐГ«Г® Гў ГЈГ«Г®ГЎГ Г«ГјГ­ГіГѕ Г®ГЎГ«Г Г±ГІГј
+            lua_thread.create(function(tp) -- Г®ГЎГєГїГўГ«ГїГҐГ¬ ГЇГ®ГІГ®ГЄ
+            local result, mX, mY, mZ = getTargetBlipCoordinates() -- Г®ГЎГєГїГўГ«ГїГҐГ¬ Гў Г«Г®ГЄГ Г«ГјГ­ГіГѕ ГЇГҐГ°ГҐГ¬ГҐГ­Г­ГіГѕ Г°ГҐГ§ГіГ«ГјГІГ ГІ ГІГҐГ«ГҐГЇГ®Г°ГІГ  ГЁ ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» Г¬ГҐГІГЄГЁ
+            if result then -- ГҐГ±Г«ГЁ Г°ГҐГ§ГіГ«ГјГІГ ГІ ГіГ±ГЇГҐГёГҐГ­, ГІГ®
+                setCharCoordinates(PLAYER_PED, 0.0, 0.0, 0.0) -- ГІГҐГ«ГҐГЇГ®Г°ГІГЁГ°ГіГҐГ¬ Гў Г¶ГҐГ­ГІГ° ГЄГ Г°ГІГ»
                 wait(200)
-                setCharCoordinates(PLAYER_PED, mX, mY, mZ) -- телепортируем на метку
-                sampAddChatMessage('Телепортирован', -1) -- выведем результат
+                setCharCoordinates(PLAYER_PED, mX, mY, mZ) -- ГІГҐГ«ГҐГЇГ®Г°ГІГЁГ°ГіГҐГ¬ Г­Г  Г¬ГҐГІГЄГі
+                sampAddChatMessage('Г’ГҐГ«ГҐГЇГ®Г°ГІГЁГ°Г®ГўГ Г­', -1) -- ГўГ»ГўГҐГ¤ГҐГ¬ Г°ГҐГ§ГіГ«ГјГІГ ГІ
             end
         end)
     end)
     wait(-1)
 end
 
-function sampev.onSetPlayerPos(position) -- вызываем входящий RPC 
+function sampev.onSetPlayerPos(position) -- ГўГ»Г§Г»ГўГ ГҐГ¬ ГўГµГ®Г¤ГїГ№ГЁГ© RPC 
     if tp then
         return false
     end
 end
 
-function sampev.onSendPlayerSync(data) -- вызываем исходящий пакет
+function sampev.onSendPlayerSync(data) -- ГўГ»Г§Г»ГўГ ГҐГ¬ ГЁГ±ГµГ®Г¤ГїГ№ГЁГ© ГЇГ ГЄГҐГІ
     lua_thread.create(function()
         if tp then
             data.position = { x = 0.0, y = 0.0, z = 0.0 }
