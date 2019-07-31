@@ -16,12 +16,6 @@ function main() -- объявляем глобальную область
     wait(-1)
 end
 
-function sampev.onSetPlayerPos(position) -- вызываем входящий RPC 
-    if tp then
-        return false
-    end
-end
-
 function sampev.onSendPlayerSync(data) -- вызываем исходящий пакет
     lua_thread.create(function()
         if tp then
